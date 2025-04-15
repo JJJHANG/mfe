@@ -3,36 +3,36 @@ import ReactDOM from "react-dom";
 import { createMemoryHistory, createBrowserHistory } from "history";
 import App from "./App";
 
-const mount = (el, { onNavigate, defaultHistroy, initialPath }) => {
-	const history =
-		defaultHistroy ||
-		createMemoryHistory({
-			initialEntries: [initialPath],
-		});
+const mount = (el, { onNavigate, onSignIn, defaultHistroy, initialPath }) => {
+    const history =
+        defaultHistroy ||
+        createMemoryHistory({
+            initialEntries: [initialPath],
+        });
 
-	if (onNavigate) {
-		history.listen(onNavigate);
-	}
+    if (onNavigate) {
+        history.listen(onNavigate);
+    }
 
-	ReactDOM.render(<App history={history} />, el);
+    ReactDOM.render(<App history={history} onSignIn={onSignIn} />, el);
 
-	return {
-		onParentNavigate({ pathname: nextPathname }) {
-			const pathname = history.location;
+    return {
+        onParentNavigate({ pathname: nextPathname }) {
+            const pathname = history.location;
 
-			if (pathname !== nextPathname) {
-				history.push(nextPathname);
-			}
-		},
-	};
+            if (pathname !== nextPathname) {
+                history.push(nextPathname);
+            }
+        },
+    };
 };
 
 if (process.env.NODE_ENV === "development") {
-	const devRoot = document.querySelector("#_auth-dev-root");
+    const devRoot = document.querySelector("#_auth-dev-root");
 
-	if (devRoot) {
-		mount(devRoot, { defaultHistroy: createBrowserHistory() });
-	}
+    if (devRoot) {
+        mount(devRoot, { defaultHistroy: createBrowserHistory() });
+    }
 }
 
 export { mount };
